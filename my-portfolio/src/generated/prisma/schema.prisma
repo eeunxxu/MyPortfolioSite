@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// 유저 (나만)
+model User {
+  id       Int      @id @default(autoincrement())
+  email    String   @unique
+  password String
+  name     String
+  createAt DateTime @default(now())
+
+  blogPosts BlogPost[]
+}
+
+// 블로그 글
+model BlogPost {
+  id          Int    @id @default(autoincrement()) // 아이디
+  title       String //  제목
+  content     String // 내용
+  viewContent Int    @default(0) // 조회수
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  comments  Comment[] // 연결된 댓글들
+  likes     Like[] // 좋아요 
+  likeCount Int       @default(0) // 좋아요 개수
+  createAt  DateTime  @default(now()) // 작성 일시
+}
+
+// 댓글
+model Comment {
+  id         Int      @id @default(autoincrement()) // 아이디
+  blogPost   BlogPost @relation(fields: [blogPostId], references: [id])
+  blogPostId Int
+  content    String
+  author     String // 댓글 작성자 이름 (익명 가능)
+  createAt   DateTime @default(now())
+}
+
+// 좋아요
+model Like {
+  id         Int      @id @default(autoincrement())
+  blogPost   BlogPost @relation(fields: [blogPostId], references: [id])
+  blogPostId Int
+  author     String
+  createAt   DateTime @default(now())
+
+  @@unique([blogPostId, author]) // 중복 좋아요 방지
+}
