@@ -1,10 +1,19 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
-
+.font-jetbrains {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+pre,
+code {
+  font-family: var(--font-jetbrains), monospace;
+  font-size: 13px;
+  line-height: 1.4;
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

@@ -14,6 +14,7 @@ const config: Config = {
         foreground: 'var(--foreground)',
       },
       fontFamily: {
+        jetbrains: ['var(--font-jetbrains)'],
         sans: ['var(--font-geist-sans)'],
         mono: ['var(--font-geist-mono)'],
       },
