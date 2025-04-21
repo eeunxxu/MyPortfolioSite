@@ -17,7 +17,13 @@ export async function POST(req: NextRequest) {
     const result = loginSchema.safeParse(body);
     if (!result.success) {
       return NextResponse.json(
-        { message: '형식이 올바르지 않습니다.', error: result.error.flatten() },
+        {
+          success: false,
+          error: {
+            message: '형식이 올바르지 않습니다.',
+            error: result.error.flatten(),
+          },
+        },
         { status: 400 }
       );
     }
@@ -28,7 +34,13 @@ export async function POST(req: NextRequest) {
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      return NextResponse.json({ message: '로그인 실패' }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: { message: '이메일 혹은 비밀번호가 올바르지 않습니다.' },
+        },
+        { status: 400 }
+      );
     }
 
     // 3.JWT 발급
@@ -36,9 +48,18 @@ export async function POST(req: NextRequest) {
       expiresIn: '1h',
     });
 
-    return NextResponse.json({ token, name: user.name });
+    return NextResponse.json({
+      success: true,
+      response: { token, name: user.name },
+    });
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ message: '서버 에러 발생' }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        error: { message: '서버 에러 발생', code: 500 },
+      },
+      { status: 500 }
+    );
   }
 }

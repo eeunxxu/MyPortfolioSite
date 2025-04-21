@@ -20,7 +20,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
     if (!post) {
       return NextResponse.json(
-        { message: '게시글을 찾을 수 없습니다.' },
+        {
+          success: false,
+          error: { message: '게시글을 찾을 수 없습니다.' },
+        },
         { status: 404 }
       );
     }
@@ -29,7 +32,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   } catch (err) {
     console.error('글 조회 에러:', err);
     return NextResponse.json(
-      { message: '글 조회 중 서버 오류가 발생' },
+      { success: false, error: { message: '글 조회 중 서버 오류가 발생' } },
       { status: 500 }
     );
   }
@@ -44,7 +47,7 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
     const authUser = await verifyToken(req);
     if (!authUser) {
       return NextResponse.json(
-        { message: '인증되지 않은 사용자입니다.' },
+        { success: false, error: { message: '인증되지 않은 사용자입니다.' } },
         { status: 401 }
       );
     }
@@ -54,7 +57,10 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
     // 유효성 검사
     if (!title || !content) {
       return NextResponse.json(
-        { message: '제목과 내용을 모두 입력하세요.' },
+        {
+          success: false,
+          error: { message: '제목과 내용을 모두 입력하세요.' },
+        },
         { status: 400 }
       );
     }
@@ -66,14 +72,20 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
 
     if (!existingPost) {
       return NextResponse.json(
-        { message: '존재하지 않는 게시글입니다.' },
+        {
+          success: false,
+          error: { message: '존재하지 않는 게시글입니다.' },
+        },
         { status: 404 }
       );
     }
 
     if (existingPost.userId !== authUser.userId) {
       return NextResponse.json(
-        { message: '작성자만 수정할 수 있습니다.' },
+        {
+          success: false,
+          error: { message: '작성자만 수정할 수 있습니다.' },
+        },
         { status: 403 }
       );
     }
@@ -85,13 +97,16 @@ export async function PATCH(req: NextRequest): Promise<NextResponse> {
     });
 
     return NextResponse.json({
-      message: '게시글이 성공적으로 수정되었습니다.',
-      post: updatedPost,
+      success: true,
+      response: {
+        message: '게시글이 성공적으로 수정되었습니다.',
+        post: updatedPost,
+      },
     });
   } catch (err) {
     console.error('게시글 수정 오류:', err);
     return NextResponse.json(
-      { message: '게시글 수정 중 서버 오류 발생' },
+      { success: false, error: { message: '게시글 수정 중 서버 오류 발생' } },
       { status: 500 }
     );
   }
@@ -106,7 +121,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
     const authUser = await verifyToken(req);
     if (!authUser) {
       return NextResponse.json(
-        { message: '인증되지 않은 사용자입니다.' },
+        { success: false, error: { message: '인증되지 않은 사용자입니다.' } },
         { status: 401 }
       );
     }
@@ -118,7 +133,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
 
     if (!existingPost) {
       return NextResponse.json(
-        { message: '존재하지 않는 게시글입니다.' },
+        { success: false, error: { message: '존재하지 않는 게시글입니다.' } },
         { status: 404 }
       );
     }
@@ -126,7 +141,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
     // 본인 글인지 확인
     if (existingPost.userId !== authUser.userId) {
       return NextResponse.json(
-        { message: '작성자만 삭제할 수 있습니다.' },
+        { success: false, error: { message: '작성자만 삭제할 수 있습니다.' } },
         { status: 403 }
       );
     }
@@ -137,12 +152,15 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
     });
 
     return NextResponse.json({
-      message: '게시글이 성공적으로 삭제되었습니다.',
+      success: true,
+      response: {
+        message: '게시글이 성공적으로 삭제되었습니다.',
+      },
     });
   } catch (err) {
     console.error('게시글 삭제 중 오류:', err);
     return NextResponse.json(
-      { message: '서버 오류가 발생했습니다.' },
+      { success: false, error: { message: '서버 오류가 발생했습니다.' } },
       { status: 500 }
     );
   }

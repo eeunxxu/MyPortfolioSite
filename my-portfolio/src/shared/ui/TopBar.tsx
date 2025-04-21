@@ -5,6 +5,7 @@ const TopBar = () => {
     <div className="w-full h-14 bg-amber-300 px-4">
       <div className="h-full w-full flex items-center justify-between">
         <Link href="/blog">Blog</Link>
+        <Link href="/login">Login</Link>
       </div>
     </div>
   );

@@ -6,7 +6,10 @@ export async function POST(req: NextRequest) {
   const authUser = verifyToken(req);
   if (!authUser) {
     return NextResponse.json(
-      { message: '인증되지 않은 사용자입니다.' },
+      {
+        success: false,
+        error: { message: '인증되지 않은 사용자입니다.' },
+      },
       { status: 401 }
     );
   }
@@ -14,7 +17,8 @@ export async function POST(req: NextRequest) {
 
   if (!title || !content) {
     return NextResponse.json(
-      { message: '제목과 내용을 모두 입력하세요.' },
+      { success: false, error: { message: '제목과 내용을 모두 입력하세요.' } },
+
       { status: 400 }
     );
   }
@@ -27,5 +31,8 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return NextResponse.json({ message: '글 작성 완료:', post });
+  return NextResponse.json({
+    success: true,
+    response: { message: '글 작성 완료:', post },
+  });
 }

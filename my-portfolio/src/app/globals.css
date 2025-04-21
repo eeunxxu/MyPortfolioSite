@@ -14,6 +14,41 @@ code {
   font-size: 13px;
   line-height: 1.4;
 }
+
+/* 전체 에디터 감싸는 컨테이너 제거 */
+.toastui-editor-defaultUI {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* 편집 영역 및 프리뷰 padding 제거 */
+.toastui-editor-defaultUI .toastui-editor-main {
+  padding: 0 !important;
+}
+
+/* 좌우 열 경계선 제거 */
+.toastui-editor-ww-container,
+.toastui-editor-md-container {
+  border: none !important;
+}
+
+.toastui-editor-contents pre,
+.toastui-editor-contents code {
+  font-family: var(--font-jetbrains), monospace !important;
+}
+
+.toastui-editor-container {
+  font-family: var(--font-jetbrains), monospace !important;
+}
+
+.toastui-editor-contents {
+  font-family: var(--font-jetbrains), monospace !important;
+}
+
+.toastui-editor-contents pre,
+.toastui-editor-contents code {
+  font-family: var(--font-jetbrains), monospace !important;
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
